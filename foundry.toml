@@ -1,6 +1,7 @@
 [default]
-src = 'src'
-out = 'out'
-libs = ['lib']
+verbosity = 3
+
+[ci]
+fuzz-runs = 50000
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
