@@ -55,6 +55,9 @@ contract UnsignedLinspaceByNumel is GeneratorsTest {
   }
 
   function testFuzz_UnsignedLinspaceByNumel_Overloads(uint256 start, uint256 stop) public {
+    // Bound minimum difference to avoid reverting from numel - 1 <= size.
+    vm.assume(Generators.range(start, stop) >= 49); // Using 49 since default size is 50.
+
     uint256[] memory a = Generators.linspace(start, stop);
     uint256[] memory b = Generators.linspace(start, stop, 50);
     uint256[] memory c = Generators.linspaceByNumel(start, stop, 50);
@@ -113,6 +116,9 @@ contract SignedLinspaceByNumel is GeneratorsTest {
   }
 
   function testFuzz_SignedLinspaceByNumel_Overloads(int256 start, int256 stop) public {
+    // Bound minimum difference to avoid reverting from numel - 1 <= size.
+    vm.assume(Generators.range(start, stop) >= 49); // Using 49 since default size is 50.
+
     int256[] memory a = Generators.linspace(start, stop);
     int256[] memory b = Generators.linspace(start, stop, 50);
     int256[] memory c = Generators.linspaceByNumel(start, stop, 50);

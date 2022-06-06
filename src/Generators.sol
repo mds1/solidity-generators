@@ -44,8 +44,10 @@ library Generators {
     bool descending = start > stop;
     if (descending) (start, stop) = (stop, start);
 
-    if (start == stop) numel = 1;
-    uint256 step = numel == 1 ? 0 : (stop - start) / (numel - 1);
+    uint256 size = stop - start;
+    if (size == 0) numel = 1;
+    require(numel - 1 <= size, "number of elements is larger than range"); // Prevent step size of 0 when numel > 1
+    uint256 step = numel == 1 ? 0 : size / (numel - 1);
 
     result = new uint256[](numel);
     for (uint256 i = 0; i < numel; i++) {
@@ -57,8 +59,10 @@ library Generators {
     bool descending = start > stop;
     if (descending) (start, stop) = (stop, start);
 
-    if (start == stop) numel = 1;
-    uint256 step = numel == 1 ? 0 : range(start, stop) / (numel - 1);
+    uint256 size = range(start, stop);
+    if (size == 0) numel = 1;
+    require(numel - 1 <= size, "number of elements is larger than range"); // Prevent step size of 0 when numel > 1
+    uint256 step = numel == 1 ? 0 : size / (numel - 1);
 
     result = new int256[](numel);
     for (uint256 i = 0; i < numel; i++) {
