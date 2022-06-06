@@ -18,6 +18,12 @@ contract GeneratorsTest is Test {
   int256[] signedExpectedAscending2 = [int256(0), 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   int256[] signedExpectedDescending2 = [int256(10), 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
 
+  uint256[] logspaceAscending = [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6];
+  uint256[] logspaceDescending = [1e6, 1e5, 1e4, 1e3, 1e2, 1e1, 1e0];
+
+  uint256[] logspaceAscending2 = [4, 8, 16, 32, 64, 128, 256, 512, 1024];
+  uint256[] logspaceDescending2 = [1024, 512, 256, 128, 64, 32, 16, 8, 4];
+
   function assertEq(uint256[] memory a, uint256[] memory b) internal {
     if (keccak256(abi.encode(a)) != keccak256(abi.encode(b))) {
       emit log("Error: a == b not satisfied [string]");
@@ -157,6 +163,34 @@ contract SignedArange is GeneratorsTest {
 
     int256[] memory a = Generators.arange(start, stop);
     int256[] memory b = Generators.arange(start, stop, 1);
+    assertEq(a, b);
+  }
+}
+
+contract Logspace is GeneratorsTest {
+  function test_Ascending() public {
+    uint256[] memory array = Generators.logspace(0, 6, 7); // Base 10.
+    assertEq(array, logspaceAscending);
+
+    uint256[] memory array2 = Generators.logspace(2, 10, 10 - 2 + 1, 2); // Base 2.
+    assertEq(array2, logspaceAscending2);
+  }
+
+  function test_Descending() public {
+    uint256[] memory array = Generators.logspace(6, 0, 7); // Base 10.
+    assertEq(array, logspaceDescending);
+
+    uint256[] memory array2 = Generators.logspace(10, 2, 10 - 2 + 1, 2); // Base 2.
+    assertEq(array2, logspaceDescending2);
+  }
+
+  function testFuzz_Overloads(uint256 start, uint256 stop) public {
+    // Bound numbers to prevent overflow.
+    start = bound(start, 0, 10);
+    stop = bound(stop, start + 49, start + 49 + 20); // Ensure we don't revert due to zero step size.
+
+    uint256[] memory a = Generators.logspace(start, stop);
+    uint256[] memory b = Generators.logspace(start, stop, 50, 10);
     assertEq(a, b);
   }
 }

@@ -98,13 +98,21 @@ library Generators {
 
   // Default to 100 elements.
   function logspace(uint256 start, uint256 stop) internal pure returns (uint256[] memory result) {
-    result = logspace(start, stop, 100);
+    result = logspace(start, stop, 50);
   }
 
   // Specify the number of elements.
-  function logspace(uint256 start, uint256 stop, uint256 n) internal pure returns (uint256[] memory result) {
-    start; stop; n; result; // Silence compiler warnings.
-    revert("not implemented"); // TODO Implement logarithmic spacing.
+  function logspace(uint256 start, uint256 stop, uint256 num) internal pure returns (uint256[] memory result) {
+    result = logspace(start, stop, num, 10);
+  }
+
+  // Specify the number of elements and the exponent base.
+  function logspace(uint256 start, uint256 stop, uint256 num, uint256 base) internal pure returns (uint256[] memory result) {
+    // TODO Improve robustness so `linspace(2, 3, 4, 10)` returns [100, 215, 464, 1000] instead of reverting.
+    result = linspace(start, stop, num);
+    for (uint256 i = 0; i < result.length; i++) {
+      result[i] = base ** result[i];
+    }
   }
 
   // -----------------------

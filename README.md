@@ -1,8 +1,7 @@
 # Solidity Array Generators
 
-Solidity library offering `linspace` and `arange` (and soon `logspace`) methods to generate evenly spaced arrays.
+Solidity library offering `linspace`, `arange`, and `logspace` methods to generate evenly spaced arrays.
 Both signed and unsigned integers are supported.
-Logarithmically spaced arrays are not yet supported.
 
 *This library has not been heavily tested and may contain bugs.*
 
@@ -34,15 +33,18 @@ Arrays default to a length of 50 and step size of 1 unless specified otherwise.
 Note that although the start and stop values are inclusive, the stop value is not guaranteed to be in the array depending on the specified parameters.
 See the examples below for more info.
 
+Note that current implementation of `logspace` is naive, and therefore will revert if the parameters passed are not valid `linspace` args.
+A future version will remove this restriction.
+
 ```solidity
 uint256 ustart = 0;
 uint256 ustop  = 1000;
 int256 istart = -1000;
 int256 istop = 1000;
 
-// ---------------------------------------
-// -------- By number of elements --------
-// ---------------------------------------
+// -----------------------------------------------
+// -------- Linear, by number of elements --------
+// -----------------------------------------------
 
 Generators.linspace(ustart, ustop);
 // Returns [0, 20, 40, ..., 940, 960, 980]
@@ -63,9 +65,9 @@ Generators.linspace(istart, istop, 50);
 Generators.linspace(istart, istop, 51);
 // Returns [-1000, -960, -920, ..., 880, 920, 960, 1000]
 
-// ------------------------------
-// -------- By step size --------
-// ------------------------------
+// --------------------------------------
+// -------- Linear, by step size --------
+// --------------------------------------
 
 Generators.arange(ustart, ustop);
 // Returns [0, 1, 2, ..., 998, 999, 1000]
@@ -80,6 +82,16 @@ Generators.arange(istart, istop, 500);
 Generators.arange(istart, istop);
 // Returns [-1000, -999, -998, ..., 998, 999, 1000]
 
+// -----------------------------
+// -------- Logarithmic --------
+// -----------------------------
+
+Generators.logspace(0, 6, 7); // Base 10.
+// Returns [1, 10, 100, 1000, 10_000, 100_000, 1_000_000]
+
+Generators.logspace(2, 10, 10 - 2 + 1, 2); // Base 2.
+// Returns [4, 8, 16, 32, 64, 128, 256, 512, 1024]
+
 // --------------------------------
 // -------- Other examples --------
 // --------------------------------
@@ -87,6 +99,9 @@ Generators.arange(istart, istop);
 // We can flip the order for a descending array.
 Generators.arange(istop, istart);
 // Returns [1000, 999, 998, ..., -998, -999, -1000]
+
+Generators.logspace(6, 0, 7); // Base 10.
+// Returns [1_000_000, 100_000, 10_000, 1000, 100, 10, 1]
 
 // Bounds are not guaranteed to be exclusive if not cleanly divisible.
 Generators.linspace(ustart, 10, 4);
