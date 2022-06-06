@@ -25,47 +25,39 @@ library Generators {
   // -------- By number of elements --------
 
   function linspace(uint256 start, uint256 stop) internal pure returns (uint256[] memory result) {
-    result = linspaceByNumel(start, stop, 50);
+    result = linspace(start, stop, 50);
   }
 
   function linspace(int256 start, int256 stop) internal pure returns (int256[] memory result) {
-    result = linspaceByNumel(start, stop, 50);
+    result = linspace(start, stop, 50);
   }
 
-  function linspace(uint256 start, uint256 stop, uint256 numel) internal pure returns (uint256[] memory result) {
-    result = linspaceByNumel(start, stop, numel);
-  }
-
-  function linspace(int256 start, int256 stop, uint256 numel) internal pure returns (int256[] memory result) {
-    result = linspaceByNumel(start, stop, numel);
-  }
-
-  function linspaceByNumel(uint256 start, uint256 stop, uint256 numel) internal pure returns (uint256[] memory result) {
+  function linspace(uint256 start, uint256 stop, uint256 num) internal pure returns (uint256[] memory result) {
     bool descending = start > stop;
     if (descending) (start, stop) = (stop, start);
 
     uint256 size = stop - start;
-    if (size == 0) numel = 1;
-    require(numel - 1 <= size, "number of elements is larger than range"); // Prevent step size of 0 when numel > 1
-    uint256 step = numel == 1 ? 0 : size / (numel - 1);
+    if (size == 0) num = 1;
+    require(num - 1 <= size, "num larger than range"); // Prevent step size of 0 when num > 1
+    uint256 step = num == 1 ? 0 : size / (num - 1);
 
-    result = new uint256[](numel);
-    for (uint256 i = 0; i < numel; i++) {
+    result = new uint256[](num);
+    for (uint256 i = 0; i < num; i++) {
       result[i] = descending ? stop - i * step : start + i * step;
     }
   }
 
-  function linspaceByNumel(int256 start, int256 stop, uint256 numel) internal pure returns (int256[] memory result) {
+  function linspace(int256 start, int256 stop, uint256 num) internal pure returns (int256[] memory result) {
     bool descending = start > stop;
     if (descending) (start, stop) = (stop, start);
 
     uint256 size = range(start, stop);
-    if (size == 0) numel = 1;
-    require(numel - 1 <= size, "number of elements is larger than range"); // Prevent step size of 0 when numel > 1
-    uint256 step = numel == 1 ? 0 : size / (numel - 1);
+    if (size == 0) num = 1;
+    require(num - 1 <= size, "num larger than range"); // Prevent step size of 0 when num > 1
+    uint256 step = num == 1 ? 0 : size / (num - 1);
 
-    result = new int256[](numel);
-    for (uint256 i = 0; i < numel; i++) {
+    result = new int256[](num);
+    for (uint256 i = 0; i < num; i++) {
       // Unlike the unsigned case, the signed case requires that we add `step` to the prior array value instead of
       // simply using `start + i * step`. This is because `i * step` may be larger than type(int256).max for
       // ranges such as `linspace(type(int256).min, 1, 100)`, and we can't represent that gap as a uint256 and
@@ -81,23 +73,23 @@ library Generators {
   // -------- By step size --------
 
   // Default to a step size of 1.
-  function linspaceByStep(uint256 start, uint256 stop) internal pure returns (uint256[] memory result) {
-    result = linspaceByStep(start, stop, 1);
+  function arange(uint256 start, uint256 stop) internal pure returns (uint256[] memory result) {
+    result = arange(start, stop, 1);
   }
 
-  function linspaceByStep(int256 start, int256 stop) internal pure returns (int256[] memory result) {
-    result = linspaceByStep(start, stop, 1);
+  function arange(int256 start, int256 stop) internal pure returns (int256[] memory result) {
+    result = arange(start, stop, 1);
   }
 
   // Specify the step size.
-  function linspaceByStep(uint256 start, uint256 stop, uint256 step) internal pure returns (uint256[] memory result) {
-    uint256 num = (range(start, stop) / step) + 1; // Number of elements for the specified step size.
-    result = linspaceByNumel(start, stop, num);
+  function arange(uint256 start, uint256 stop, uint256 step) internal pure returns (uint256[] memory result) {
+    uint256 num = (range(start, stop) / step) + 1;
+    result = linspace(start, stop, num);
   }
 
-  function linspaceByStep(int256 start, int256 stop, uint256 step) internal pure returns (int256[] memory result) {
-    uint256 num = (range(start, stop) / step) + 1; // Number of elements for the specified step size.
-    result = linspaceByNumel(start, stop, num);
+  function arange(int256 start, int256 stop, uint256 step) internal pure returns (int256[] memory result) {
+    uint256 num = (range(start, stop) / step) + 1;
+    result = linspace(start, stop, num);
   }
 
   // -------------------------------------

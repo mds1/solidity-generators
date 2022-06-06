@@ -37,59 +37,63 @@ contract GeneratorsTest is Test {
   }
 }
 
-contract UnsignedLinspaceByNumel is GeneratorsTest {
-  function test_UnsignedLinspaceByNumel_Ascending() public {
+contract UnsignedLinspace is GeneratorsTest {
+  function test_Ascending() public {
     uint256[] memory array = Generators.linspace(uint256(0), 10, 11);
     assertEq(array, unsignedExpectedAscending);
   }
 
-  function test_UnsignedLinspaceByNumel_Descending() public {
+  function test_Descending() public {
     uint256[] memory array = Generators.linspace(uint256(10), 0, 11);
     assertEq(array, unsignedExpectedDescending);
   }
 
-  function test_UnsignedStartEqualsStop() public {
+  function test_StartEqualsStop() public {
     uint256[] memory array = Generators.linspace(uint256(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
   }
 
-  function testFuzz_UnsignedLinspaceByNumel_Overloads(uint256 start, uint256 stop) public {
-    // Bound minimum difference to avoid reverting from numel - 1 <= size.
+  function testFuzz_Overloads(uint256 start, uint256 stop) public {
+    // Bound minimum difference to avoid reverting from num - 1 <= size.
     vm.assume(Generators.range(start, stop) >= 49); // Using 49 since default size is 50.
 
     uint256[] memory a = Generators.linspace(start, stop);
     uint256[] memory b = Generators.linspace(start, stop, 50);
-    uint256[] memory c = Generators.linspaceByNumel(start, stop, 50);
     assertEq(a, b);
-    assertEq(a, c);
   }
 }
 
-contract UnsignedLinspaceByStep is GeneratorsTest {
-  function test_UnsignedLinspaceByStep_Ascending() public {
-    uint256[] memory array = Generators.linspaceByStep(uint256(0), 10, 1);
+contract UnsignedArange is GeneratorsTest {
+  function test_Ascending() public {
+    uint256[] memory array = Generators.arange(uint256(0), 10, 1);
     assertEq(array, unsignedExpectedAscending);
   }
 
-  function test_UnsignedLinspaceByStep_Descending() public {
-    uint256[] memory array = Generators.linspaceByStep(uint256(10), 0, 1);
+  function test_Descending() public {
+    uint256[] memory array = Generators.arange(uint256(10), 0, 1);
     assertEq(array, unsignedExpectedDescending);
   }
 
-  function testFuzz_UnsignedLinspaceByStep_Overloads(uint256 start, uint256 stop) public {
+  function test_StartEqualsStop() public {
+    uint256[] memory array = Generators.arange(uint256(25), 25);
+    assertEq(array.length, 1);
+    assertEq(array[0], 25);
+  }
+
+  function testFuzz_Overloads(uint256 start, uint256 stop) public {
     // Bound max difference to avoid unrealistic/long-running test cases.
     if (stop > start && stop - start > 1000) start = stop - 1000;
     if (stop < start && start - stop > 1000) stop = start - 1000;
 
-    uint256[] memory a = Generators.linspaceByStep(start, stop);
-    uint256[] memory b = Generators.linspaceByStep(start, stop, 1);
+    uint256[] memory a = Generators.arange(start, stop);
+    uint256[] memory b = Generators.arange(start, stop, 1);
     assertEq(a, b);
   }
 }
 
-contract SignedLinspaceByNumel is GeneratorsTest {
-  function test_SignedLinspaceByNumel_Ascending() public {
+contract SignedLinspace is GeneratorsTest {
+  function test_Ascending() public {
     int256[] memory array = Generators.linspace(-5, 5, 11);
     assertEq(array, signedExpectedAscending);
 
@@ -97,7 +101,7 @@ contract SignedLinspaceByNumel is GeneratorsTest {
     assertEq(array2, signedExpectedAscending2);
   }
 
-  function test_SignedLinspaceByNumel_Descending() public {
+  function test_Descending() public {
     int256[] memory array = Generators.linspace(5, -5, 11);
     assertEq(array, signedExpectedDescending);
 
@@ -105,7 +109,7 @@ contract SignedLinspaceByNumel is GeneratorsTest {
     assertEq(array2, signedExpectedDescending2);
   }
 
-  function test_SignedStartEqualsStop() public {
+  function test_StartEqualsStop() public {
     int256[] memory array = Generators.linspace(int256(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
@@ -115,36 +119,44 @@ contract SignedLinspaceByNumel is GeneratorsTest {
     assertEq(array2[0], -20);
   }
 
-  function testFuzz_SignedLinspaceByNumel_Overloads(int256 start, int256 stop) public {
-    // Bound minimum difference to avoid reverting from numel - 1 <= size.
+  function testFuzz_Overloads(int256 start, int256 stop) public {
+    // Bound minimum difference to avoid reverting from num - 1 <= size.
     vm.assume(Generators.range(start, stop) >= 49); // Using 49 since default size is 50.
 
     int256[] memory a = Generators.linspace(start, stop);
     int256[] memory b = Generators.linspace(start, stop, 50);
-    int256[] memory c = Generators.linspaceByNumel(start, stop, 50);
     assertEq(a, b);
-    assertEq(a, c);
   }
 }
 
-contract SignedLinspaceByStep is GeneratorsTest {
-  function test_SignedLinspaceByStep_Ascending() public {
-    int256[] memory array = Generators.linspaceByStep(-5, 5, 1);
+contract SignedArange is GeneratorsTest {
+  function test_Ascending() public {
+    int256[] memory array = Generators.arange(-5, 5, 1);
     assertEq(array, signedExpectedAscending);
   }
 
-  function test_SignedLinspaceByStep_Descending() public {
-    int256[] memory array = Generators.linspaceByStep(5, -5, 1);
+  function test_Descending() public {
+    int256[] memory array = Generators.arange(5, -5, 1);
     assertEq(array, signedExpectedDescending);
   }
 
-  function testFuzz_SignedLinspaceByStep_Overloads(int256 start, int256 stop) public {
+  function test_StartEqualsStop() public {
+    int256[] memory array = Generators.arange(int256(25), 25);
+    assertEq(array.length, 1);
+    assertEq(array[0], 25);
+
+    int256[] memory array2 = Generators.arange(-20, -20);
+    assertEq(array2.length, 1);
+    assertEq(array2[0], -20);
+  }
+
+  function testFuzz_Overloads(int256 start, int256 stop) public {
     // Bound max difference to avoid unrealistic/long-running test cases.
     if (stop > start && Generators.range(start, stop) > 1000) start = stop - 1000;
     if (stop < start && Generators.range(start, stop) > 1000) stop = start - 1000;
 
-    int256[] memory a = Generators.linspaceByStep(start, stop);
-    int256[] memory b = Generators.linspaceByStep(start, stop, 1);
+    int256[] memory a = Generators.arange(start, stop);
+    int256[] memory b = Generators.arange(start, stop, 1);
     assertEq(a, b);
   }
 }
