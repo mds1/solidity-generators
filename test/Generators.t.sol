@@ -5,9 +5,6 @@ import "forge-std/Test.sol";
 import "src/Generators.sol";
 
 contract GeneratorsTest is Test {
-  event log_named_array(string key, uint[] val);
-  event log_named_array(string key, int[] val);
-
   // Test vectors.
   uint[] unsignedExpectedAscending = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   uint[] unsignedExpectedDescending = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
@@ -23,24 +20,6 @@ contract GeneratorsTest is Test {
 
   uint[] logspaceAscending2 = [4, 8, 16, 32, 64, 128, 256, 512, 1024];
   uint[] logspaceDescending2 = [1024, 512, 256, 128, 64, 32, 16, 8, 4];
-
-  function assertEq(uint[] memory a, uint[] memory b) internal {
-    if (keccak256(abi.encode(a)) != keccak256(abi.encode(b))) {
-      emit log("Error: a == b not satisfied [string]");
-      emit log_named_array("  Expected", b);
-      emit log_named_array("    Actual", a);
-      fail();
-    }
-  }
-
-  function assertEq(int[] memory a, int[] memory b) internal {
-    if (keccak256(abi.encode(a)) != keccak256(abi.encode(b))) {
-      emit log("Error: a == b not satisfied [string]");
-      emit log_named_array("  Expected", b);
-      emit log_named_array("    Actual", a);
-      fail();
-    }
-  }
 }
 
 contract UnsignedLinspace is GeneratorsTest {
