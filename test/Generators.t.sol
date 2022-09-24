@@ -2,8 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "src/Generators.sol";
+import {linspace, arange, logspace, range} from "src/Generators.sol";
 
+// =======================
+// ======== Setup ========
+// =======================
 contract GeneratorsTest is Test {
   // Test vectors.
   uint[] unsignedExpectedAscending = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -22,46 +25,91 @@ contract GeneratorsTest is Test {
   uint[] logspaceDescending2 = [1024, 512, 256, 128, 64, 32, 16, 8, 4];
 }
 
-contract UnsignedLinspace is GeneratorsTest {
+// ==========================
+// ======== Linspace ========
+// ==========================
+
+contract LinspaceUnsigned is GeneratorsTest {
   function test_Ascending() public {
-    uint[] memory array = Generators.linspace(uint(0), 10, 11);
+    uint[] memory array = linspace(uint(0), 10, 11);
     assertEq(array, unsignedExpectedAscending);
   }
 
   function test_Descending() public {
-    uint[] memory array = Generators.linspace(uint(10), 0, 11);
+    uint[] memory array = linspace(uint(10), 0, 11);
     assertEq(array, unsignedExpectedDescending);
   }
 
   function test_StartEqualsStop() public {
-    uint[] memory array = Generators.linspace(uint(25), 25);
+    uint[] memory array = linspace(uint(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
   }
 
   function testFuzz_Overloads(uint start, uint stop) public {
     // Bound minimum difference to avoid reverting from num - 1 <= size.
-    vm.assume(Generators.range(start, stop) >= 49); // Using 49 since default size is 50.
+    vm.assume(range(start, stop) >= 49); // Using 49 since default size is 50.
 
-    uint[] memory a = Generators.linspace(start, stop);
-    uint[] memory b = Generators.linspace(start, stop, 50);
+    uint[] memory a = linspace(start, stop);
+    uint[] memory b = linspace(start, stop, 50);
     assertEq(a, b);
   }
 }
 
-contract UnsignedArange is GeneratorsTest {
+contract LinspaceSigned is GeneratorsTest {
   function test_Ascending() public {
-    uint[] memory array = Generators.arange(uint(0), 10, 1);
+    int[] memory array = linspace(-5, 5, 11);
+    assertEq(array, signedExpectedAscending);
+
+    int[] memory array2 = linspace(int(0), 10, 11);
+    assertEq(array2, signedExpectedAscending2);
+  }
+
+  function test_Descending() public {
+    int[] memory array = linspace(5, -5, 11);
+    assertEq(array, signedExpectedDescending);
+
+    int[] memory array2 = linspace(int(10), 0, 11);
+    assertEq(array2, signedExpectedDescending2);
+  }
+
+  function test_StartEqualsStop() public {
+    int[] memory array = linspace(int(25), 25);
+    assertEq(array.length, 1);
+    assertEq(array[0], 25);
+
+    int[] memory array2 = linspace(-20, -20);
+    assertEq(array2.length, 1);
+    assertEq(array2[0], -20);
+  }
+
+  function testFuzz_Overloads(int start, int stop) public {
+    // Bound minimum difference to avoid reverting from num - 1 <= size.
+    vm.assume(range(start, stop) >= 49); // Using 49 since default size is 50.
+
+    int[] memory a = linspace(start, stop);
+    int[] memory b = linspace(start, stop, 50);
+    assertEq(a, b);
+  }
+}
+
+// =======================
+// ======== Arange ========
+// =======================
+
+contract ArangeUnsigned is GeneratorsTest {
+  function test_Ascending() public {
+    uint[] memory array = arange(uint(0), 10, 1);
     assertEq(array, unsignedExpectedAscending);
   }
 
   function test_Descending() public {
-    uint[] memory array = Generators.arange(uint(10), 0, 1);
+    uint[] memory array = arange(uint(10), 0, 1);
     assertEq(array, unsignedExpectedDescending);
   }
 
   function test_StartEqualsStop() public {
-    uint[] memory array = Generators.arange(uint(25), 25);
+    uint[] memory array = arange(uint(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
   }
@@ -71,99 +119,62 @@ contract UnsignedArange is GeneratorsTest {
     if (stop > start && stop - start > 1000) start = stop - 1000;
     if (stop < start && start - stop > 1000) stop = start - 1000;
 
-    uint[] memory a = Generators.arange(start, stop);
-    uint[] memory b = Generators.arange(start, stop, 1);
+    uint[] memory a = arange(start, stop);
+    uint[] memory b = arange(start, stop, 1);
     assertEq(a, b);
   }
 }
 
-contract SignedLinspace is GeneratorsTest {
+contract ArangeSigned is GeneratorsTest {
   function test_Ascending() public {
-    int[] memory array = Generators.linspace(-5, 5, 11);
-    assertEq(array, signedExpectedAscending);
-
-    int[] memory array2 = Generators.linspace(int(0), 10, 11);
-    assertEq(array2, signedExpectedAscending2);
-  }
-
-  function test_Descending() public {
-    int[] memory array = Generators.linspace(5, -5, 11);
-    assertEq(array, signedExpectedDescending);
-
-    int[] memory array2 = Generators.linspace(int(10), 0, 11);
-    assertEq(array2, signedExpectedDescending2);
-  }
-
-  function test_StartEqualsStop() public {
-    int[] memory array = Generators.linspace(int(25), 25);
-    assertEq(array.length, 1);
-    assertEq(array[0], 25);
-
-    int[] memory array2 = Generators.linspace(-20, -20);
-    assertEq(array2.length, 1);
-    assertEq(array2[0], -20);
-  }
-
-  function testFuzz_Overloads(int start, int stop) public {
-    // Bound minimum difference to avoid reverting from num - 1 <= size.
-    vm.assume(Generators.range(start, stop) >= 49); // Using 49 since default size is 50.
-
-    int[] memory a = Generators.linspace(start, stop);
-    int[] memory b = Generators.linspace(start, stop, 50);
-    assertEq(a, b);
-  }
-}
-
-contract SignedArange is GeneratorsTest {
-  function test_Ascending() public {
-    int[] memory array = Generators.arange(-5, 5, 1);
+    int[] memory array = arange(-5, 5, 1);
     assertEq(array, signedExpectedAscending);
   }
 
   function test_Descending() public {
-    int[] memory array = Generators.arange(5, -5, 1);
+    int[] memory array = arange(5, -5, 1);
     assertEq(array, signedExpectedDescending);
   }
 
   function test_StartEqualsStop() public {
-    int[] memory array = Generators.arange(int(25), 25);
+    int[] memory array = arange(int(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
 
-    int[] memory array2 = Generators.arange(-20, -20);
+    int[] memory array2 = arange(-20, -20);
     assertEq(array2.length, 1);
     assertEq(array2[0], -20);
   }
 
   function testFuzz_Overloads(int start, int stop) public {
     // Bound max difference to avoid unrealistic/long-running test cases.
-    if (stop > start && Generators.range(start, stop) > 1000) {
-      start = stop - 1000;
-    }
-    if (stop < start && Generators.range(start, stop) > 1000) {
-      stop = start - 1000;
-    }
+    if (stop > start && range(start, stop) > 1000) start = stop - 1000;
+    if (stop < start && range(start, stop) > 1000) stop = start - 1000;
 
-    int[] memory a = Generators.arange(start, stop);
-    int[] memory b = Generators.arange(start, stop, 1);
+    int[] memory a = arange(start, stop);
+    int[] memory b = arange(start, stop, 1);
     assertEq(a, b);
   }
 }
 
+// ==========================
+// ======== Logspace ========
+// ==========================
+
 contract Logspace is GeneratorsTest {
   function test_Ascending() public {
-    uint[] memory array = Generators.logspace(0, 6, 7); // Base 10.
+    uint[] memory array = logspace(0, 6, 7); // Base 10.
     assertEq(array, logspaceAscending);
 
-    uint[] memory array2 = Generators.logspace(2, 10, 10 - 2 + 1, 2); // Base 2.
+    uint[] memory array2 = logspace(2, 10, 10 - 2 + 1, 2); // Base 2.
     assertEq(array2, logspaceAscending2);
   }
 
   function test_Descending() public {
-    uint[] memory array = Generators.logspace(6, 0, 7); // Base 10.
+    uint[] memory array = logspace(6, 0, 7); // Base 10.
     assertEq(array, logspaceDescending);
 
-    uint[] memory array2 = Generators.logspace(10, 2, 10 - 2 + 1, 2); // Base 2.
+    uint[] memory array2 = logspace(10, 2, 10 - 2 + 1, 2); // Base 2.
     assertEq(array2, logspaceDescending2);
   }
 
@@ -172,8 +183,8 @@ contract Logspace is GeneratorsTest {
     start = bound(start, 0, 10);
     stop = bound(stop, start + 49, start + 49 + 20); // Ensure we don't revert due to zero step size.
 
-    uint[] memory a = Generators.logspace(start, stop);
-    uint[] memory b = Generators.logspace(start, stop, 50, 10);
+    uint[] memory a = logspace(start, stop);
+    uint[] memory b = logspace(start, stop, 50, 10);
     assertEq(a, b);
   }
 }
