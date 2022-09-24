@@ -1,7 +1,29 @@
-[default]
+# =================================
+# ======== Default Profile ========
+# =================================
+[profile.default]
 verbosity = 3
+remappings = [
+  # Allows imports using e.g. `test/` to refer to root `test` directory.
+  "test/=test/",
+  "script/=script/",
+]
 
-[ci]
-fuzz-runs = 10000
+# ============================
+# ======== CI Profile ========
+# ============================
+[profile.ci.fuzz]
+runs = 10000
 
-# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+# ============================
+# ======== Formatting ========
+# ============================
+[profile.default.fmt]
+line_length = 80
+tab_width = 2
+bracket_spacing = false
+int_types = 'short'
+multiline_func_header = 'attributes_first'
+quote_style = 'double'
+number_underscore = 'thousands'
+single_line_statement_blocks = 'single'
