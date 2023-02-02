@@ -2,28 +2,23 @@
 # ======== Default Profile ========
 # =================================
 [profile.default]
-verbosity = 3
-remappings = [
-  # Allows imports using e.g. `test/` to refer to root `test` directory.
-  "test/=test/",
-  "script/=script/",
-]
+  verbosity = 3
 
 # ============================
 # ======== CI Profile ========
 # ============================
 [profile.ci.fuzz]
-runs = 10000
+  runs = 10000
 
 # ============================
 # ======== Formatting ========
 # ============================
 [profile.default.fmt]
-line_length = 80
-tab_width = 2
-bracket_spacing = false
-int_types = 'short'
-multiline_func_header = 'attributes_first'
-quote_style = 'double'
-number_underscore = 'thousands'
-single_line_statement_blocks = 'single'
+  line_length = 80
+  tab_width = 2
+  bracket_spacing = false
+  int_types = 'short'
+  multiline_func_header = 'attributes_first'
+  quote_style = 'double'
+  number_underscore = 'thousands'
+  single_line_statement_blocks = 'single'

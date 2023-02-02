@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import {linspace, arange, logspace, range} from "src/Generators.sol";
+import {linspace, arange, logspace, range} from "../src/Generators.sol";
 
 // =======================
 // ======== Setup ========
