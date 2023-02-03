@@ -1,6 +1,6 @@
 # Solidity Array Generators
 
-Solidity library offering `linspace`, `arange`, and `logspace` methods to generate evenly spaced arrays.
+Solidity library offering `linspace`, `arrange`, and `logspace` methods to generate evenly spaced arrays.
 Both signed and unsigned integers are supported.
 
 This library was written for use in development/testing:
@@ -30,8 +30,8 @@ This library generates evenly spaced arrays between the specified start and stop
 Function names and signatures are similar to those of [numpy](https://numpy.org/), and this library currently supports:
 
 - `linspace`: Returns linearly spaced numbers over a specified interval, specifying the length of the array. Defaults to 50 elements in the array if not specified.
-- `arange`: Returns linearly spaced numbers over a specified interval, specifying the step size. Defaults to a step size of 1 if not specified.
-- `logspace`: Returns numbers spaced evenly on a log scale. Unlike `linspace` and `arange`, you don't enter the start and stop values directly, but their exponents. Start and stop values are then calculated as `base ** start` and `base ** stop`. Defaults to 50 elements in the array and a base of 10 if not specified.
+- `arrange`: Returns linearly spaced numbers over a specified interval, specifying the step size. Defaults to a step size of 1 if not specified.
+- `logspace`: Returns numbers spaced evenly on a log scale. Unlike `linspace` and `arrange`, you don't enter the start and stop values directly, but their exponents. Start and stop values are then calculated as `base ** start` and `base ** stop`. Defaults to 50 elements in the array and a base of 10 if not specified.
 
 Each method behaves as follows:
 
@@ -50,7 +50,7 @@ If there is demand for it, a future version may remove this restriction.
 ## Examples
 
 ```solidity
-import {linspace, arange, logspace} from "solidity-generators/Generators.sol";
+import {linspace, arrange, logspace} from "solidity-generators/Generators.sol";
 
 uint256 ustart = 0;
 uint256 ustop  = 1000;
@@ -83,21 +83,21 @@ linspace(istart, istop, 51);
 // Returns [-1000, -960, -920, ..., 880, 920, 960, 1000]
 
 // ========================
-// ======== Arange ========
+// ======== Arrange ========
 // ========================
 // Linear spacing, by step size.
 
-arange(ustart, ustop);
+arrange(ustart, ustop);
 // Returns [0, 1, 2, ..., 998, 999, 1000]
 
-arange(ustart, ustop, 250);
+arrange(ustart, ustop, 250);
 // Returns [0, 250, 500, 750, 1000]
 
 
-arange(istart, istop, 500);
+arrange(istart, istop, 500);
 // Returns [-1000, -500, 0, 500, 1000]
 
-arange(istart, istop);
+arrange(istart, istop);
 // Returns [-1000, -999, -998, ..., 998, 999, 1000]
 
 // ==========================
@@ -116,7 +116,7 @@ logspace(2, 10, 9, 2); // Base 2.
 // ================================
 
 // We can flip the order for a descending array.
-arange(istop, istart);
+arrange(istop, istart);
 // Returns [1000, 999, 998, ..., -998, -999, -1000]
 
 logspace(6, 0, 7); // Base 10.
@@ -127,6 +127,6 @@ logspace(6, 0, 7); // Base 10.
 linspace(ustart, 10, 4);
 // Returns [0, 3, 6, 9]
 
-arange(ustart, 10, 3);
+arrange(ustart, 10, 3);
 // Returns [0, 3, 6, 9]
 ```

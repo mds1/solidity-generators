@@ -82,21 +82,21 @@ function linspace(int start, int stop, uint num)
 }
 
 // ========================
-// ======== Arange ========
+// ======== Arrange ========
 // ========================
 // Linear spacing, by step size.
 
 // Default to a step size of 1.
-function arange(uint start, uint stop) pure returns (uint[] memory arr) {
-  arr = arange(start, stop, 1);
+function arrange(uint start, uint stop) pure returns (uint[] memory arr) {
+  arr = arrange(start, stop, 1);
 }
 
-function arange(int start, int stop) pure returns (int[] memory arr) {
-  arr = arange(start, stop, 1);
+function arrange(int start, int stop) pure returns (int[] memory arr) {
+  arr = arrange(start, stop, 1);
 }
 
 // Specify the step size.
-function arange(uint start, uint stop, uint step)
+function arrange(uint start, uint stop, uint step)
   pure
   returns (uint[] memory arr)
 {
@@ -104,7 +104,7 @@ function arange(uint start, uint stop, uint step)
   arr = linspace(start, stop, num);
 }
 
-function arange(int start, int stop, uint step) pure returns (int[] memory arr) {
+function arrange(int start, int stop, uint step) pure returns (int[] memory arr) {
   uint num = (range(start, stop) / step) + 1;
   arr = linspace(start, stop, num);
 }

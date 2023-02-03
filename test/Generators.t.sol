@@ -94,22 +94,22 @@ contract LinspaceSigned is GeneratorsTest {
 }
 
 // =======================
-// ======== Arange ========
+// ======== Arrange ========
 // =======================
 
-contract ArangeUnsigned is GeneratorsTest {
+contract ArrangeUnsigned is GeneratorsTest {
   function test_Ascending() public {
-    uint[] memory array = arange(uint(0), 10, 1);
+    uint[] memory array = arrange(uint(0), 10, 1);
     assertEq(array, unsignedExpectedAscending);
   }
 
   function test_Descending() public {
-    uint[] memory array = arange(uint(10), 0, 1);
+    uint[] memory array = arrange(uint(10), 0, 1);
     assertEq(array, unsignedExpectedDescending);
   }
 
   function test_StartEqualsStop() public {
-    uint[] memory array = arange(uint(25), 25);
+    uint[] memory array = arrange(uint(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
   }
@@ -119,29 +119,29 @@ contract ArangeUnsigned is GeneratorsTest {
     if (stop > start && stop - start > 1000) start = stop - 1000;
     if (stop < start && start - stop > 1000) stop = start - 1000;
 
-    uint[] memory a = arange(start, stop);
-    uint[] memory b = arange(start, stop, 1);
+    uint[] memory a = arrange(start, stop);
+    uint[] memory b = arrange(start, stop, 1);
     assertEq(a, b);
   }
 }
 
-contract ArangeSigned is GeneratorsTest {
+contract ArrangeSigned is GeneratorsTest {
   function test_Ascending() public {
-    int[] memory array = arange(-5, 5, 1);
+    int[] memory array = arrange(-5, 5, 1);
     assertEq(array, signedExpectedAscending);
   }
 
   function test_Descending() public {
-    int[] memory array = arange(5, -5, 1);
+    int[] memory array = arrange(5, -5, 1);
     assertEq(array, signedExpectedDescending);
   }
 
   function test_StartEqualsStop() public {
-    int[] memory array = arange(int(25), 25);
+    int[] memory array = arrange(int(25), 25);
     assertEq(array.length, 1);
     assertEq(array[0], 25);
 
-    int[] memory array2 = arange(-20, -20);
+    int[] memory array2 = arrange(-20, -20);
     assertEq(array2.length, 1);
     assertEq(array2[0], -20);
   }
@@ -151,8 +151,8 @@ contract ArangeSigned is GeneratorsTest {
     if (stop > start && range(start, stop) > 1000) start = stop - 1000;
     if (stop < start && range(start, stop) > 1000) stop = start - 1000;
 
-    int[] memory a = arange(start, stop);
-    int[] memory b = arange(start, stop, 1);
+    int[] memory a = arrange(start, stop);
+    int[] memory b = arrange(start, stop, 1);
     assertEq(a, b);
   }
 }
